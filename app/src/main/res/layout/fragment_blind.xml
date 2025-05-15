@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/fragment_blind">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_margin="32dp"
+            android:layout_gravity="center">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/fragment_blind_button_container"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                app:layout_constraintDimensionRatio="1:1"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintWidth_percent="1.0">
+
+            <com.google.android.material.button.MaterialButton
+                    android:id="@+id/button_bluetooth"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    style="@style/BlindButtonsStyle"
+                    app:icon="@drawable/ic_bluetooth"
+                    app:iconTint="@color/black"
+                    android:text="Pair by Bluetooth"
+                    app:iconSize="120dp"
+                    app:iconGravity="textTop" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</FrameLayout>
