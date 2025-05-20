@@ -23,47 +23,55 @@
 
             <com.google.android.material.button.MaterialButton
                     android:id="@+id/button_navigate"
-                    style="@style/FamilyButtonsStyle"
+                    style="@style/ButtonsStyle"
                     app:icon="@drawable/ic_navigation"
                     app:iconTint="@color/black"
-                    android:text="navigate"
+                    android:text="@string/navigate"
+                    android:textSize="14sp"
                     app:layout_constraintBottom_toTopOf="@+id/guideline_horizontal_50"
                     app:layout_constraintEnd_toStartOf="@+id/guideline_vertical_50"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:cornerRadius="32dp" />
 
             <com.google.android.material.button.MaterialButton
                     android:id="@+id/button_call"
-                    style="@style/FamilyButtonsStyle"
+                    style="@style/ButtonsStyle"
                     app:icon="@drawable/ic_call"
                     app:iconTint="@color/black"
-                    android:text="call"
+                    android:text="@string/call"
+                    android:textSize="14sp"
                     app:layout_constraintBottom_toTopOf="@+id/guideline_horizontal_50"
                     app:layout_constraintStart_toStartOf="@+id/guideline_vertical_50"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:cornerRadius="32dp" />
 
             <com.google.android.material.button.MaterialButton
                     android:id="@+id/button_sync"
-                    style="@style/FamilyButtonsStyle"
+                    style="@style/ButtonsStyle"
                     app:icon="@drawable/ic_protect"
                     app:iconTint="@color/black"
-                    android:text="sync"
+                    android:text="@string/sync"
+                    android:textSize="14sp"
                     app:layout_constraintTop_toBottomOf="@+id/guideline_horizontal_50"
                     app:layout_constraintEnd_toStartOf="@+id/guideline_vertical_50"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintBottom_toBottomOf="parent" />
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:cornerRadius="32dp" />
 
             <com.google.android.material.button.MaterialButton
                     android:id="@+id/button_warn"
-                    style="@style/FamilyButtonsStyle"
+                    style="@style/ButtonsStyle"
                     app:icon="@drawable/ic_warning"
                     app:iconTint="@color/black"
-                    android:text="warn"
+                    android:text="@string/warn"
+                    android:textSize="14sp"
                     app:layout_constraintTop_toBottomOf="@+id/guideline_horizontal_50"
                     app:layout_constraintStart_toStartOf="@+id/guideline_vertical_50"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintBottom_toBottomOf="parent" />
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:cornerRadius="32dp" />
 
             <androidx.constraintlayout.widget.Guideline
                     android:layout_width="wrap_content"

@@ -26,12 +26,14 @@
                     android:id="@+id/button_bluetooth"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    style="@style/BlindButtonsStyle"
+                    style="@style/ButtonsStyle"
                     app:icon="@drawable/ic_bluetooth"
                     app:iconTint="@color/black"
-                    android:text="Pair by Bluetooth"
                     app:iconSize="120dp"
-                    app:iconGravity="textTop" />
+                    app:iconGravity="textTop"
+                    android:text="@string/pair_by_bluetooth"
+                    android:textSize="24sp"
+                    app:cornerRadius="120dp" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 

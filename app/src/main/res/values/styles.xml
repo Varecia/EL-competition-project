@@ -1,22 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <style name="FamilyButtonsStyle" parent="Widget.MaterialComponents.Button">
+    <style name="ButtonsStyle" parent="Widget.MaterialComponents.Button">
         <item name="android:layout_width">0dp</item>
         <item name="android:layout_height">0dp</item>
         <item name="android:layout_margin">8dp</item>
         <item name="android:minWidth">0dp</item>
         <item name="android:minHeight">0dp</item>
-        <item name="android:textSize">14sp</item>
         <item name="android:textColor">@color/black</item>
         <item name="backgroundTint">@color/light_grey</item>
-        <item name="cornerRadius">16dp</item>
-    </style>
-
-    <style name="BlindButtonsStyle" parent="">
-        <item name="android:textSize">24sp</item>
-        <item name="android:textColor">@color/black</item>
-        <item name="backgroundTint">@color/light_grey</item>
-        <item name="cornerFamily">rounded</item>
-        <item name="cornerSize">50%</item>
     </style>
 </resources>

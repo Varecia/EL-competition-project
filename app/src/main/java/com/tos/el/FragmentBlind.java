@@ -1,6 +1,8 @@
 package com.tos.el;
 
+import android.content.Intent;
 import android.os.Bundle;
+
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,13 +18,11 @@ public class FragmentBlind extends Fragment {
 
         MaterialButton button_bluetooth = view.findViewById(R.id.button_bluetooth);
 
-        button_bluetooth.setOnClickListener(v -> handleBlindButtonClick(1));
-
+        button_bluetooth.setOnClickListener(v -> {
+            Intent intent = new Intent(getActivity(), ObjectDetectionActivity.class);
+            startActivity(intent);
+        });
 
         return view;
-    }
-
-    private void handleBlindButtonClick(int buttonId) {
-        //TODO: onClick
     }
 }
