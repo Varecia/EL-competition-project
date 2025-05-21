@@ -24,7 +24,7 @@ public class ObjectDetectionActivity extends AppCompatActivity {
     private Button button;
     private ImageView imageView;
     private TextView resultView;
-    private String imageURL = "TODO"; // TODO: 这将是一个固定的地址
+    private String imageURL = "http://192.168.43.66/capture";
     private Bitmap bitmap;
     private Handler handler = new Handler();
     private Runnable runnable;
