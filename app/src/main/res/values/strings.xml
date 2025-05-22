@@ -6,10 +6,12 @@
     <string name="detect_failure">未识别到物品</string>
     <string name="start">开始</string>
     <string name="stop">停止</string>
-    <string name="image_to_detect">这是即将被识别的图片</string>
+    <string name="image">这是即将被识别的图片</string>
     <string name="pair_by_bluetooth">开始蓝牙配对</string>
     <string name="navigate">定位</string>
     <string name="call">呼叫</string>
     <string name="sync">同步</string>
     <string name="warn">警报</string>
+    <string name="start_sync">开始同步</string>
+    <string name="stop_sync">停止同步</string>
 </resources>

@@ -1,10 +1,12 @@
 package com.tos.el;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 
 import com.google.android.material.button.MaterialButton;
@@ -28,6 +30,17 @@ public class FragmentFamily extends Fragment {
     }
 
     private void handleFamilyButtonClick(int buttonId) {
-        //TODO: onClick
+        switch(buttonId){
+            case 1:
+                break;
+            case 2:
+                break;
+            case 3:
+                Intent intent = new Intent(getActivity(), BitmapSyncActivity.class);
+                startActivity(intent);
+                break;
+            case 4:
+                break;
+        }
     }
 }

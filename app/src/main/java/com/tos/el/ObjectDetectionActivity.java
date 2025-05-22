@@ -1,18 +1,11 @@
 package com.tos.el;
 
-import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
-import android.os.Handler;
-import android.widget.Button;
-import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.work.Data;
-import androidx.work.OneTimeWorkRequest;
-import androidx.work.WorkManager;
+import androidx.work.WorkInfo;
 
 import com.google.mlkit.vision.common.InputImage;
 import com.google.mlkit.vision.label.ImageLabel;
@@ -20,92 +13,28 @@ import com.google.mlkit.vision.label.ImageLabeler;
 import com.google.mlkit.vision.label.ImageLabeling;
 import com.google.mlkit.vision.label.defaults.ImageLabelerOptions;
 
-public class ObjectDetectionActivity extends AppCompatActivity {
-    private Button button;
-    private ImageView imageView;
+public class ObjectDetectionActivity extends BitmapDownloadActivity {
     private TextView resultView;
-    private String imageURL = "http://192.168.43.66/capture";
-    private Bitmap bitmap;
-    private Handler handler = new Handler();
-    private Runnable runnable;
-    private boolean working = false;
-    private static final int INTERVAL = 5000; // 目前决定每5秒进行一次识别
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_object_detection);
-
+        button = findViewById(R.id.button_object_detect);
         imageView = findViewById(R.id.object_detection_image);
         resultView = findViewById(R.id.object_detection_result);
 
-        button = findViewById(R.id.button_object_detect);
-
-        button.setOnClickListener(v -> {
-            if (working) {
-                stop();
-            } else {
-                start();
-            }
-        });
-    }
-
-    public void downloadBitmap() {
-        if (imageURL == null) return;
-        Data url = new Data.Builder().putString("url", imageURL).build();
-        OneTimeWorkRequest downloadWorkRequest = new OneTimeWorkRequest.Builder(DownloadImageWorker.class).setInputData(url).build();
-        WorkManager.getInstance(this).enqueue(downloadWorkRequest);
-        WorkManager.getInstance(this).getWorkInfoByIdLiveData(downloadWorkRequest.getId()).observe(this, workInfo -> {
-            if (workInfo != null) {
-                switch (workInfo.getState()) {
-                    case SUCCEEDED:
-                        String savedPath = workInfo.getOutputData().getString("file_path");
-                        Toast.makeText(ObjectDetectionActivity.this, "图片同步成功：" + savedPath, Toast.LENGTH_SHORT).show();
-                        bitmap = BitmapFactory.decodeFile(savedPath);
-                        imageView.setImageBitmap(bitmap);
-                        resultView.setText(R.string.detecting);
-                        detectObjects();
-                        break;
-                    case FAILED:
-                        Toast.makeText(ObjectDetectionActivity.this, "图片未同步", Toast.LENGTH_SHORT).show();
-                        break;
-                    case RUNNING:
-                        break;
-                }
-            }
-        });
-    }
-
-    private void start() {
-        if (working) return;
-        working = true;
-        button.setText(R.string.stop);
-
-        runnable = new Runnable() {
-            @Override
-            public void run() {
-                downloadBitmap();
-                if (working) {
-                    handler.postDelayed(this, INTERVAL);
-                }
-            }
-        };
-
-        handler.postDelayed(runnable, INTERVAL);
-    }
-
-    private void stop() {
-        if (!working) return;
-        working = false;
-        button.setText(R.string.start);
-
-        handler.removeCallbacks(runnable);
+        super.onCreate(savedInstanceState);
     }
 
     @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        stop();
+    public void onSuccess(WorkInfo workInfo) {
+        String savedPath = workInfo.getOutputData().getString("file_path");
+        Toast.makeText(ObjectDetectionActivity.this, "图片同步成功：" + savedPath, Toast.LENGTH_SHORT).show();
+        bitmap = BitmapFactory.decodeFile(savedPath);
+        imageView.setImageBitmap(bitmap);
+        resultView.setText(R.string.detecting);
+
+        detectObjects();
     }
 
     private void detectObjects() {
