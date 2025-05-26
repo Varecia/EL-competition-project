@@ -51,7 +51,7 @@ public abstract class BitmapDownloadActivity extends AppCompatActivity {
         Toast.makeText(BitmapDownloadActivity.this, "下载中", Toast.LENGTH_SHORT).show();
     }
 
-    public void downloadBitmap() {
+    public final void downloadBitmap() {
         if (imageURL == null) return;
         Data url = new Data.Builder().putString("url", imageURL).build();
         OneTimeWorkRequest downloadWorkRequest = new OneTimeWorkRequest.Builder(DownloadImageWorker.class).setInputData(url).build();
