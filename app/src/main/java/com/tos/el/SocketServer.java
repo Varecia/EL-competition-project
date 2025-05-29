@@ -6,6 +6,7 @@ import android.os.Looper;
 import android.speech.tts.TextToSpeech;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import java.io.BufferedReader;
@@ -23,9 +24,8 @@ public class SocketServer {
     protected ServerSocket serverSocket;
     protected boolean isServerRunning = false;
 
-    private SocketServer(){
-        // 初始化TTS
-        if(this.activity != null){
+    private SocketServer() {
+        if (this.activity != null) {
             textToSpeech = new TextToSpeech(this.activity, status -> {
                 if (status == TextToSpeech.SUCCESS) {
                     int result = textToSpeech.setLanguage(Locale.CHINESE);
@@ -37,9 +37,10 @@ public class SocketServer {
         }
     }
 
-    public static SocketServer getSocketServerInstance(){
+    public static SocketServer getSocketServerInstance() {
         return socketServerInstance;
     }
+
     protected void startSocketServer() {
         if (isServerRunning) return;
 
@@ -53,9 +54,7 @@ public class SocketServer {
                 }
             } catch (IOException e) {
                 if (isServerRunning) {
-                    activity.runOnUiThread(() ->
-                            Toast.makeText(this.activity, "服务器错误: " + e.getMessage(), Toast.LENGTH_SHORT).show()
-                    );
+                    activity.runOnUiThread(() -> Toast.makeText(this.activity, "服务器错误: " + e.getMessage(), Toast.LENGTH_SHORT).show());
                 }
             }
         }).start();
@@ -75,8 +74,7 @@ public class SocketServer {
 
     private void handleClientConnection(Socket clientSocket) {
         new Thread(() -> {
-            try (BufferedReader reader = new BufferedReader(
-                    new InputStreamReader(clientSocket.getInputStream()))) {
+            try (BufferedReader reader = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()))) {
                 String message;
                 while ((message = reader.readLine()) != null) {
                     parseMessage(message);
@@ -94,43 +92,47 @@ public class SocketServer {
     }
 
     protected void parseMessage(String message) {
-        if (message.startsWith("ALERT")) {
-            playAlertSound();
-        } else if (message.startsWith("REMINDER")) {
-            String[] parts = message.split(":");
-            if (parts.length >= 3) {
-                String content = parts[1];
-                long delaySeconds = Long.parseLong(parts[2]);
-                scheduleReminder(content, delaySeconds);
+        if (isServerRunning) {
+            if (message.startsWith("ALERT")) {
+                playAlertSound();
+            } else if (message.startsWith("REMINDER")) {
+                String[] parts = message.split(":");
+                if (parts.length >= 3) {
+                    String content = parts[1];
+                    long delaySeconds = Long.parseLong(parts[2]);
+                    scheduleReminder(content, delaySeconds);
+                }
             }
         }
     }
 
-    protected void sendAlertMessage(){
-        parseMessage("ALERT");
+    protected void sendAlertMessage() {
+        if (isServerRunning) {
+            parseMessage("ALERT");
+        }
     }
 
     protected void playAlertSound() {
-        // 播放铃声
-        // 注意：需要确保有R.raw.alert资源
-        activity.runOnUiThread(() -> {
-            try {
-                MediaPlayer mediaPlayer = MediaPlayer.create(this.activity, R.raw.alert);
-                mediaPlayer.start();
-                mediaPlayer.setOnCompletionListener(MediaPlayer::release);
-            } catch (Exception e) {
-                Toast.makeText(this.activity, "播放警报失败", Toast.LENGTH_SHORT).show();
-            }
-        });
+        if (isServerRunning) {
+            activity.runOnUiThread(() -> {
+                try {
+                    MediaPlayer mediaPlayer = MediaPlayer.create(this.activity, R.raw.alert);
+                    mediaPlayer.start();
+                    mediaPlayer.setOnCompletionListener(MediaPlayer::release);
+                } catch (Exception e) {
+                    Toast.makeText(this.activity, "播放警报失败", Toast.LENGTH_SHORT).show();
+                }
+            });
+        }
     }
 
-    protected void scheduleReminder(String content, long delaySeconds) {
-        new Handler(Looper.getMainLooper()).postDelayed(() -> {
-            showReminder(content);
-        }, delaySeconds * 60000);
+    protected void scheduleReminder(@NonNull String content, long delaySeconds) {
+        if (isServerRunning) {
+            new Handler(Looper.getMainLooper()).postDelayed(() -> showReminder(content), delaySeconds * 60000);
+        }
     }
 
-    protected void showReminder(String content) {
+    protected void showReminder(@NonNull String content) {
         activity.runOnUiThread(() -> {
             Toast.makeText(this.activity, content, Toast.LENGTH_LONG).show();
             if (textToSpeech != null) {
@@ -139,25 +141,21 @@ public class SocketServer {
         });
     }
 
-    public void sendMessage(String content, long delay) {
-        new Thread(() -> {
-            try {
-                // 使用变量而不是硬编码IP
-                Socket socket = new Socket("192.168.43.1", 8080);
-                PrintWriter writer = new PrintWriter(socket.getOutputStream(), true);
-                writer.println("REMINDER:" + content + ":" + delay);
-                writer.close();
-                socket.close();
+    public void sendMessage(@NonNull String content, long delay) {
+        if (isServerRunning) {
+            new Thread(() -> {
+                try {
+                    Socket socket = new Socket("192.168.43.1", 8080);
+                    PrintWriter writer = new PrintWriter(socket.getOutputStream(), true);
+                    writer.println("REMINDER:" + content + ":" + delay);
+                    writer.close();
+                    socket.close();
 
-                // 主线程提示发送成功
-                this.activity.runOnUiThread(() ->
-                        Toast.makeText(activity, "提醒已发送", Toast.LENGTH_SHORT).show()
-                );
-            } catch (IOException e) {
-                this.activity.runOnUiThread(() ->
-                        Toast.makeText(activity, "发送失败", Toast.LENGTH_SHORT).show()
-                );
-            }
-        }).start();
+                    this.activity.runOnUiThread(() -> Toast.makeText(activity, "提醒已发送", Toast.LENGTH_SHORT).show());
+                } catch (IOException e) {
+                    this.activity.runOnUiThread(() -> Toast.makeText(activity, "发送失败", Toast.LENGTH_SHORT).show());
+                }
+            }).start();
+        }
     }
 }

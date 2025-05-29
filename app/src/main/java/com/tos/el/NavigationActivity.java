@@ -35,6 +35,7 @@ public class NavigationActivity extends ScheduledUpdateActivity {
         super.onCreate(savedInstanceState);
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
         checkLocationPermission();
+        setInterval(10000L);
     }
 
     private boolean checkLocationPermission() {
@@ -90,7 +91,7 @@ public class NavigationActivity extends ScheduledUpdateActivity {
         if (location == null) return;
         double latitude = location.getLatitude();
         double longitude = location.getLongitude();
-        locationText.setText(String.format(new Locale.Builder().setLanguage("zh").setRegion("CN").build(), "纬度：%.2f\n经度：%.2f", latitude, longitude));
+        locationText.setText(String.format(new Locale.Builder().setLanguage("zh").setRegion("CN").build(), "纬度：%.6f\n经度：%.6f", latitude, longitude));
     }
 
     @Override
