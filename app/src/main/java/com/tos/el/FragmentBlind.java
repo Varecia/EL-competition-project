@@ -13,6 +13,7 @@ import androidx.fragment.app.Fragment;
 import com.google.android.material.button.MaterialButton;
 
 public class FragmentBlind extends Fragment {
+    SocketServer server=SocketServer.getSocketServerInstance();
 
     @NonNull
     @Override
@@ -26,6 +27,27 @@ public class FragmentBlind extends Fragment {
             startActivity(intent);
         });
 
+        server.startSocketServer();
+
         return view;
+    }
+
+    @Override
+    public void onPause(){
+        super.onPause();
+        if(server!=null) server.stopSocketServer();
+    }
+
+    @Override
+    public void onResume(){
+        super.onResume();
+        if(server!=null) server.startSocketServer();
+    }
+
+    @Override
+    public void onDestroy(){
+        super.onDestroy();
+        if(server!=null) server.stopSocketServer();
+        server=null;
     }
 }

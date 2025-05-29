@@ -20,4 +20,7 @@
     <string name="navigate_result">定位结果：%1$s，%1$s</string>
     <string name="start_navigate">开始定位</string>
     <string name="stop_navigate">停止定位</string>
+    <string name="message">提醒内容</string>
+    <string name="delay_minutes">延迟时间(分钟)</string>
+    <string name="send">发送提醒</string>
 </resources>
