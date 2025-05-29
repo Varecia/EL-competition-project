@@ -19,7 +19,7 @@ public class ObjectDetectionActivity extends BitmapDownloadActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         setContentView(R.layout.activity_object_detection);
-        button = findViewById(R.id.button_object_detect);
+        controller = findViewById(R.id.button_object_detect);
         imageView = findViewById(R.id.object_detection_image);
         resultView = findViewById(R.id.object_detection_result);
 

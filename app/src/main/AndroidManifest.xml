@@ -2,7 +2,11 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:tools="http://schemas.android.com/tools"
         package="com.tos.el">
+
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_BACKGROUND_LOCATION" />
 
     <application
             android:allowBackup="true"
@@ -25,8 +29,9 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".ObjectDetectionActivity"/>
-        <activity android:name=".BitmapSyncActivity"/>
+        <activity android:name=".ObjectDetectionActivity" />
+        <activity android:name=".NavigationActivity" />
+        <activity android:name=".BitmapSyncActivity" />
     </application>
 
 </manifest>

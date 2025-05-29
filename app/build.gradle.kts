@@ -43,4 +43,6 @@ dependencies {
     implementation("com.google.mlkit:image-labeling:17.0.9")
 
     implementation("androidx.work:work-runtime:2.10.1")
+
+    implementation("com.google.android.gms:play-services-location:21.3.0")
 }

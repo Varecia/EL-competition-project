@@ -32,17 +32,19 @@ public class FragmentFamily extends Fragment {
     }
 
     private void handleFamilyButtonClick(int buttonId) {
-        switch(buttonId){
+        Intent intent = null;
+        switch (buttonId) {
             case 1:
+                intent = new Intent(getActivity(), NavigationActivity.class);
                 break;
             case 2:
                 break;
             case 3:
-                Intent intent = new Intent(getActivity(), BitmapSyncActivity.class);
-                startActivity(intent);
+                intent = new Intent(getActivity(), BitmapSyncActivity.class);
                 break;
             case 4:
                 break;
         }
+        if (intent != null) startActivity(intent);
     }
 }
