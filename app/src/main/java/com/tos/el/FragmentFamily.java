@@ -12,7 +12,7 @@ import androidx.fragment.app.Fragment;
 import com.google.android.material.button.MaterialButton;
 
 public class FragmentFamily extends Fragment {
-    SocketServer server=SocketServer.getSocketServerInstance();
+    SocketClient client=new SocketClient();
 
     @NonNull
     @Override
@@ -36,7 +36,8 @@ public class FragmentFamily extends Fragment {
         Intent intent = null;
         switch (buttonId) {
             case 1:
-                intent = new Intent(getActivity(), NavigationActivity.class);
+                client.startNavigation(); //TODO
+                intent = new Intent(getActivity(), RemoteNavigationActivity.class);
                 break;
             case 2:
                 intent = new Intent(getActivity(), ReminderInputActivity.class);
@@ -45,7 +46,7 @@ public class FragmentFamily extends Fragment {
                 intent = new Intent(getActivity(), BitmapSyncActivity.class);
                 break;
             case 4:
-                server.sendAlertMessage();
+                client.sendAlertMessage();
                 break;
         }
         if (intent != null) startActivity(intent);

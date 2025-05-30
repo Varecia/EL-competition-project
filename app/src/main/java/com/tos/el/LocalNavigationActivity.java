@@ -5,43 +5,31 @@ import android.content.pm.PackageManager;
 import android.location.Location;
 import android.os.Bundle;
 import android.os.Looper;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
 import com.google.android.gms.location.FusedLocationProviderClient;
-import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationCallback;
+import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationResult;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.location.Priority;
 
 import java.util.Locale;
 
-/**
- * @deprecated 该活动为定位功能的早期实现。由于此版本仅能单机运行，故在终版中弃用，但代码仍保留。
- * @see com.tos.el.RemoteNavigationActivity
- * @see com.tos.el.LocalNavigationActivity
- */
-@Deprecated
-public class NavigationActivity extends ScheduledUpdateActivity {
+public class LocalNavigationActivity extends ScheduledUpdateActivity {
     private FusedLocationProviderClient fusedLocationClient;
-    protected TextView locationText;
+    private SocketClient client = new SocketClient(this);
     private static final int PERMISSION_REQUEST_CODE = 100;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        setContentView(R.layout.activity_navigation);
-        locationText = findViewById(R.id.location_text);
-        controller = findViewById(R.id.button_navigation);
         super.onCreate(savedInstanceState);
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
         checkLocationPermission();
-        setInterval(10000L);
     }
 
     private boolean checkLocationPermission() {
@@ -67,42 +55,42 @@ public class NavigationActivity extends ScheduledUpdateActivity {
 
     @Override
     public void update() {
-        locationText.setText(R.string.navigating);
         getLastKnownLocation();
         requestNewLocation();
     }
 
     private void getLastKnownLocation() {
         if (checkLocationPermission()) {
-            fusedLocationClient.getLastLocation().addOnSuccessListener(this, this::updateUI).addOnFailureListener(e-> Toast.makeText(this,"定位失败",Toast.LENGTH_SHORT).show());
+            fusedLocationClient.getLastLocation().addOnSuccessListener(this, this::serverUpdateLocationData).addOnFailureListener(e -> Toast.makeText(this, "定位失败",
+                    Toast.LENGTH_SHORT).show());
         }
     }
 
     private void requestNewLocation() {
         if (checkLocationPermission()) {
-            LocationRequest request = new LocationRequest.Builder(Priority.PRIORITY_HIGH_ACCURACY, 2*getInterval()).setMinUpdateIntervalMillis(getInterval()).build();
-            LocationCallback callback=new LocationCallback() {
+            LocationRequest request = new LocationRequest.Builder(Priority.PRIORITY_HIGH_ACCURACY, 2 * getInterval()).setMinUpdateIntervalMillis(getInterval()).build();
+            LocationCallback callback = new LocationCallback() {
                 @Override
                 public void onLocationResult(@NonNull LocationResult locationResult) {
-                    updateUI(locationResult.getLastLocation());
                     fusedLocationClient.removeLocationUpdates(this);
                 }
             };
             fusedLocationClient.requestLocationUpdates(request, callback, Looper.getMainLooper());
-            Toast.makeText(this,"正在请求最新位置",Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "正在请求最新位置", Toast.LENGTH_SHORT).show();
         }
     }
 
-    private void updateUI(@Nullable Location location) {
-        if (location == null) return;
+    private void serverUpdateLocationData(Location location) {
         double latitude = location.getLatitude();
         double longitude = location.getLongitude();
-        locationText.setText(String.format(new Locale.Builder().setLanguage("zh").setRegion("CN").build(), "纬度：%.6f\n经度：%.6f", latitude, longitude));
+        client.setLocationText(String.format(new Locale.Builder().setLanguage("zh").setRegion("CN").build(), "纬度：%.6f\n经度：%.6f", latitude, longitude));
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
         fusedLocationClient = null;
+        client.close();
+        client = null;
     }
 }

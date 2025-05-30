@@ -19,6 +19,7 @@ public abstract class BitmapDownloadActivity extends ScheduledUpdateActivity{
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setInterval(2000L);
     }
 
     public void onSuccess(WorkInfo workInfo){

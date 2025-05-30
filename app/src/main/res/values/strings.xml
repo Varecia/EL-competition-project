@@ -7,7 +7,7 @@
     <string name="start">开始</string>
     <string name="stop">停止</string>
     <string name="image_detection">这是即将被识别的图片</string>
-    <string name="pair_by_bluetooth">开始蓝牙配对</string>
+    <string name="pair_by_bluetooth">开始同步\n请确认设备已正常配对</string>
     <string name="navigate">定位</string>
     <string name="call">呼叫</string>
     <string name="sync">同步</string>

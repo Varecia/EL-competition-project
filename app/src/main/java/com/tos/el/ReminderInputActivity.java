@@ -9,6 +9,7 @@ import com.google.android.material.button.MaterialButton;
 import com.google.android.material.textfield.TextInputEditText;
 
 public class ReminderInputActivity extends AppCompatActivity {
+    private SocketClient client=new SocketClient(this);
     private TextInputEditText etContent, etDelay;
 
     @Override
@@ -37,11 +38,18 @@ public class ReminderInputActivity extends AppCompatActivity {
 
         try {
             long delay = Long.parseLong(delayStr);
-            SocketServer server = SocketServer.getSocketServerInstance();
-            server.sendMessage(content, delay);
+
+            client.sendMessage(content, delay);
             finish();
         } catch (NumberFormatException e) {
             Toast.makeText(this, "请输入有效数字", Toast.LENGTH_SHORT).show();
         }
+    }
+
+    @Override
+    protected void onDestroy(){
+        super.onDestroy();
+        client.close();
+        client=null;
     }
 }

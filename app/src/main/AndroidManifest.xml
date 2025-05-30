@@ -30,9 +30,15 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".ObjectDetectionActivity" />
-        <activity android:name=".NavigationActivity" />
+        <activity
+                android:name=".ObjectDetectionActivity"
+                android:exported="true" />
+        <activity android:name=".RemoteNavigationActivity" />
+        <activity android:name=".LocalNavigationActivity"
+                android:exported="true"/>
         <activity android:name=".BitmapSyncActivity" />
+        <activity android:name=".BitmapDownloadActivity" />
+        <activity android:name=".ScheduledUpdateActivity" />
         <activity
                 android:name=".ReminderInputActivity"
                 android:theme="@style/Theme.MaterialComponents.DayNight.Dialog.Alert" />

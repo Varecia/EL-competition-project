@@ -27,7 +27,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     style="@style/ButtonsStyle"
-                    app:icon="@drawable/ic_bluetooth"
+                    app:icon="@drawable/ic_bluetooth_working"
                     app:iconTint="@color/black"
                     app:iconSize="120dp"
                     app:iconGravity="textTop"

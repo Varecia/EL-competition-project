@@ -1,5 +1,7 @@
 package com.tos.el;
 
+import android.content.Intent;
+import android.graphics.Bitmap;
 import android.media.MediaPlayer;
 import android.os.Handler;
 import android.os.Looper;
@@ -10,8 +12,10 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import java.io.BufferedReader;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.net.ServerSocket;
 import java.net.Socket;
@@ -19,12 +23,19 @@ import java.util.Locale;
 
 public class SocketServer {
     private static final SocketServer socketServerInstance = new SocketServer();
-    AppCompatActivity activity;
+    private AppCompatActivity activity;
     protected TextToSpeech textToSpeech;
     protected ServerSocket serverSocket;
     protected boolean isServerRunning = false;
+    protected Bitmap currentMap;
+    protected String currentLocation;
+    private Socket client; //由于设备限制，我们目前只接受单一设备连接
 
     private SocketServer() {
+    }
+
+    public void initTTS(AppCompatActivity activity) {
+        this.activity = activity;
         if (this.activity != null) {
             textToSpeech = new TextToSpeech(this.activity, status -> {
                 if (status == TextToSpeech.SUCCESS) {
@@ -32,6 +43,9 @@ public class SocketServer {
                     if (result == TextToSpeech.LANG_MISSING_DATA || result == TextToSpeech.LANG_NOT_SUPPORTED) {
                         Toast.makeText(this.activity, "语言不支持", Toast.LENGTH_SHORT).show();
                     }
+                    Toast.makeText(this.activity,"初始化成功",Toast.LENGTH_SHORT).show();
+                }else{
+                    Toast.makeText(this.activity,"初始化失败",Toast.LENGTH_SHORT).show();
                 }
             });
         }
@@ -74,7 +88,9 @@ public class SocketServer {
 
     private void handleClientConnection(Socket clientSocket) {
         new Thread(() -> {
-            try (BufferedReader reader = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()))) {
+            try {
+                client = clientSocket;
+                BufferedReader reader = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
                 String message;
                 while ((message = reader.readLine()) != null) {
                     parseMessage(message);
@@ -95,6 +111,10 @@ public class SocketServer {
         if (isServerRunning) {
             if (message.startsWith("ALERT")) {
                 playAlertSound();
+            } else if (message.startsWith("NAVIGATION")) {
+                startNavigation();
+            } else if (message.startsWith("GET_LOCATION_DATA")) {
+                sendLocationData();
             } else if (message.startsWith("REMINDER")) {
                 String[] parts = message.split(":");
                 if (parts.length >= 3) {
@@ -103,12 +123,6 @@ public class SocketServer {
                     scheduleReminder(content, delaySeconds);
                 }
             }
-        }
-    }
-
-    protected void sendAlertMessage() {
-        if (isServerRunning) {
-            parseMessage("ALERT");
         }
     }
 
@@ -128,7 +142,7 @@ public class SocketServer {
 
     protected void scheduleReminder(@NonNull String content, long delaySeconds) {
         if (isServerRunning) {
-            new Handler(Looper.getMainLooper()).postDelayed(() -> showReminder(content), delaySeconds * 60000);
+            new Handler(Looper.getMainLooper()).postDelayed(() -> showReminder(content), 30);
         }
     }
 
@@ -141,21 +155,42 @@ public class SocketServer {
         });
     }
 
-    public void sendMessage(@NonNull String content, long delay) {
+    public void startNavigation() {
         if (isServerRunning) {
-            new Thread(() -> {
-                try {
-                    Socket socket = new Socket("192.168.43.1", 8080);
-                    PrintWriter writer = new PrintWriter(socket.getOutputStream(), true);
-                    writer.println("REMINDER:" + content + ":" + delay);
-                    writer.close();
-                    socket.close();
+            Intent intent = new Intent(activity, LocalNavigationActivity.class);
+            activity.startActivity(intent);
+        }
+    }
 
-                    this.activity.runOnUiThread(() -> Toast.makeText(activity, "提醒已发送", Toast.LENGTH_SHORT).show());
-                } catch (IOException e) {
-                    this.activity.runOnUiThread(() -> Toast.makeText(activity, "发送失败", Toast.LENGTH_SHORT).show());
-                }
-            }).start();
+    private void sendLocationData() {
+        OutputStream out = null;
+        PrintWriter writer = null;
+        try {
+            out = client.getOutputStream();
+            writer = new PrintWriter(out, true);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        if (out == null) return;
+
+        if (currentLocation == null || currentMap == null) {
+            writer.println("NO_DATA");
+        }
+
+        ByteArrayOutputStream byteStream = new ByteArrayOutputStream();
+        currentMap.compress(Bitmap.CompressFormat.JPEG, 80, byteStream);
+        byte[] mapBytes = byteStream.toByteArray();
+
+        writer.println("VALID_DATA");
+        writer.println(currentLocation);
+        writer.println(mapBytes.length);
+
+        try {
+            out.write(mapBytes);
+            out.flush();
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 }
