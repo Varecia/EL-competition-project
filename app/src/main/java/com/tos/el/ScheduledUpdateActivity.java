@@ -4,27 +4,29 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.widget.Button;
-import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
 public abstract class ScheduledUpdateActivity extends AppCompatActivity {
     protected Button controller;
     private Runnable scheduledUpdateRunner;
-    private final Handler handler=new Handler(Looper.getMainLooper());
-    private boolean isWorking=false;
-    private long interval=5000L;
+    private final Handler handler = new Handler(Looper.getMainLooper());
+    private boolean isWorking = false;
+    private long interval = 5000L;
 
-    public void setInterval(long interval){
-        this.interval=interval;
+    public void setInterval(long interval) {
+        this.interval = interval;
     }
 
-    public long getInterval(){return interval;}
+    public long getInterval() {
+        return interval;
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        if(controller==null) Toast.makeText(ScheduledUpdateActivity.this,"未设置按钮",Toast.LENGTH_SHORT).show();
-        else{
+        if (controller == null) {
+            start();
+        } else {
             controller.setOnClickListener(v -> {
                 if (isWorking) stop();
                 else start();
@@ -38,7 +40,7 @@ public abstract class ScheduledUpdateActivity extends AppCompatActivity {
     private void start() {
         if (isWorking) return;
         isWorking = true;
-        controller.setText(R.string.stop);
+        if (controller != null) controller.setText(R.string.stop);
 
         scheduledUpdateRunner = new Runnable() {
             @Override
@@ -56,7 +58,7 @@ public abstract class ScheduledUpdateActivity extends AppCompatActivity {
     private void stop() {
         if (!isWorking) return;
         isWorking = false;
-        controller.setText(R.string.start);
+        if (controller != null) controller.setText(R.string.start);
 
         handler.removeCallbacks(scheduledUpdateRunner);
     }

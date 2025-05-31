@@ -11,9 +11,9 @@ import androidx.work.OneTimeWorkRequest;
 import androidx.work.WorkInfo;
 import androidx.work.WorkManager;
 
-public abstract class BitmapDownloadActivity extends ScheduledUpdateActivity{
+public abstract class BitmapDownloadActivity extends ScheduledUpdateActivity {
     protected ImageView imageView;
-    protected String imageURL = "http://192.168.43.66/capture";
+    protected String imageURL = "http://192.168.99.219//capture";
     protected Bitmap bitmap;
 
     @Override
@@ -22,18 +22,18 @@ public abstract class BitmapDownloadActivity extends ScheduledUpdateActivity{
         setInterval(2000L);
     }
 
-    public void onSuccess(WorkInfo workInfo){
+    public void onSuccess(WorkInfo workInfo) {
         String savedPath = workInfo.getOutputData().getString("file_path");
         Toast.makeText(BitmapDownloadActivity.this, "图片同步成功：" + savedPath, Toast.LENGTH_SHORT).show();
         bitmap = BitmapFactory.decodeFile(savedPath);
         if (imageView != null) imageView.setImageBitmap(bitmap);
     }
 
-    public void onFailure(WorkInfo workInfo){
+    public void onFailure(WorkInfo workInfo) {
         Toast.makeText(BitmapDownloadActivity.this, "图片未同步", Toast.LENGTH_SHORT).show();
     }
 
-    public void running(WorkInfo workInfo){
+    public void running(WorkInfo workInfo) {
         Toast.makeText(BitmapDownloadActivity.this, "下载中", Toast.LENGTH_SHORT).show();
     }
 

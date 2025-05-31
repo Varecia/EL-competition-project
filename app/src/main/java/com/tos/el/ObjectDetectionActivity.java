@@ -15,7 +15,7 @@ import com.google.mlkit.vision.label.defaults.ImageLabelerOptions;
 
 public class ObjectDetectionActivity extends BitmapDownloadActivity {
     private TextView resultView;
-    private SocketServer server=SocketServer.getSocketServerInstance();
+    private SocketServer server = SocketServer.getSocketServerInstance();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,8 +50,8 @@ public class ObjectDetectionActivity extends BitmapDownloadActivity {
             StringBuilder result = new StringBuilder();
             for (ImageLabel label : labels) {
                 result.append(label.getText()).append(": ").append(label.getConfidence()).append("\n");
-                if(label.getConfidence()>=0.60){
-                    if(label.getText().contains("Standing")||label.getText().contains("Walking")||label.getText().contains("Wall")||label.getText().contains("Car")){
+                if (label.getConfidence() >= 0.60) {
+                    if (label.getText().contains("Standing") || label.getText().contains("Walking") || label.getText().contains("Wall") || label.getText().contains("Car")) {
                         server.parseMessage("REMINDER:注意：前方有障碍物:0");
                     }
                 }
@@ -61,21 +61,21 @@ public class ObjectDetectionActivity extends BitmapDownloadActivity {
     }
 
     @Override
-    public void onPause(){
+    public void onPause() {
         super.onPause();
-        if(server!=null) server.stopSocketServer();
+        if (server != null) server.stopSocketServer();
     }
 
     @Override
-    public void onResume(){
+    public void onResume() {
         super.onResume();
-        if(server!=null) server.startSocketServer();
+        if (server != null) server.startSocketServer();
     }
 
     @Override
-    public void onDestroy(){
+    public void onDestroy() {
         super.onDestroy();
-        if(server!=null) server.stopSocketServer();
-        server=null;
+        if (server != null) server.stopSocketServer();
+        server = null;
     }
 }

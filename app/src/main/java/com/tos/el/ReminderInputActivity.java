@@ -9,7 +9,7 @@ import com.google.android.material.button.MaterialButton;
 import com.google.android.material.textfield.TextInputEditText;
 
 public class ReminderInputActivity extends AppCompatActivity {
-    private SocketClient client=new SocketClient(this);
+    private SocketClient client = SocketClient.getSocketClientInstance();
     private TextInputEditText etContent, etDelay;
 
     @Override
@@ -22,6 +22,7 @@ public class ReminderInputActivity extends AppCompatActivity {
         MaterialButton btnSend = findViewById(R.id.btn_send_reminder);
 
         btnSend.setOnClickListener(v -> sendReminder());
+        client.setActivity(this);
     }
 
     private void sendReminder() {
@@ -47,9 +48,8 @@ public class ReminderInputActivity extends AppCompatActivity {
     }
 
     @Override
-    protected void onDestroy(){
+    protected void onDestroy() {
         super.onDestroy();
-        client.close();
-        client=null;
+        client = null;
     }
 }

@@ -30,7 +30,7 @@ public class FragmentBlind extends Fragment {
     }
 
     @Override
-    public void onDestroy(){
+    public void onDestroy() {
         super.onDestroy();
     }
 }

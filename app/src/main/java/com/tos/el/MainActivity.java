@@ -24,4 +24,10 @@ public class MainActivity extends AppCompatActivity {
         BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_nav_view);
         NavigationUI.setupWithNavController(bottomNavigationView, navController);
     }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        SocketClient.getSocketClientInstance().close();
+    }
 }

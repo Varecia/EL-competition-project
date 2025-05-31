@@ -22,7 +22,7 @@ import java.util.Locale;
 
 public class LocalNavigationActivity extends ScheduledUpdateActivity {
     private FusedLocationProviderClient fusedLocationClient;
-    private SocketClient client = new SocketClient(this);
+    private SocketServer server = SocketServer.getSocketServerInstance();
     private static final int PERMISSION_REQUEST_CODE = 100;
 
     @Override
@@ -83,14 +83,13 @@ public class LocalNavigationActivity extends ScheduledUpdateActivity {
     private void serverUpdateLocationData(Location location) {
         double latitude = location.getLatitude();
         double longitude = location.getLongitude();
-        client.setLocationText(String.format(new Locale.Builder().setLanguage("zh").setRegion("CN").build(), "纬度：%.6f\n经度：%.6f", latitude, longitude));
+        server.setCurrentLocation(String.format(new Locale.Builder().setLanguage("zh").setRegion("CN").build(), "纬度：%.6f\n经度：%.6f", latitude, longitude));
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
         fusedLocationClient = null;
-        client.close();
-        client = null;
+        server = null;
     }
 }

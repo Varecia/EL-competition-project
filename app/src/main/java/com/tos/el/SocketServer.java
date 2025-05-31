@@ -1,7 +1,7 @@
 package com.tos.el;
 
 import android.content.Intent;
-import android.graphics.Bitmap;
+//import android.graphics.Bitmap;
 import android.media.MediaPlayer;
 import android.os.Handler;
 import android.os.Looper;
@@ -12,7 +12,6 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import java.io.BufferedReader;
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
@@ -27,7 +26,7 @@ public class SocketServer {
     protected TextToSpeech textToSpeech;
     protected ServerSocket serverSocket;
     protected boolean isServerRunning = false;
-    protected Bitmap currentMap;
+    //protected Bitmap currentMap;
     protected String currentLocation;
     private Socket client; //由于设备限制，我们目前只接受单一设备连接
 
@@ -43,9 +42,9 @@ public class SocketServer {
                     if (result == TextToSpeech.LANG_MISSING_DATA || result == TextToSpeech.LANG_NOT_SUPPORTED) {
                         Toast.makeText(this.activity, "语言不支持", Toast.LENGTH_SHORT).show();
                     }
-                    Toast.makeText(this.activity,"初始化成功",Toast.LENGTH_SHORT).show();
-                }else{
-                    Toast.makeText(this.activity,"初始化失败",Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this.activity, "初始化成功", Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(this.activity, "初始化失败", Toast.LENGTH_SHORT).show();
                 }
             });
         }
@@ -111,7 +110,7 @@ public class SocketServer {
         if (isServerRunning) {
             if (message.startsWith("ALERT")) {
                 playAlertSound();
-            } else if (message.startsWith("NAVIGATION")) {
+            } else if (message.startsWith("START_NAVIGATION")) {
                 startNavigation();
             } else if (message.startsWith("GET_LOCATION_DATA")) {
                 sendLocationData();
@@ -162,6 +161,10 @@ public class SocketServer {
         }
     }
 
+    public void setCurrentLocation(String location) {
+        currentLocation = location;
+    }
+
     private void sendLocationData() {
         OutputStream out = null;
         PrintWriter writer = null;
@@ -174,20 +177,20 @@ public class SocketServer {
 
         if (out == null) return;
 
-        if (currentLocation == null || currentMap == null) {
+        if (currentLocation == null /*|| currentMap == null*/) {
             writer.println("NO_DATA");
         }
 
-        ByteArrayOutputStream byteStream = new ByteArrayOutputStream();
-        currentMap.compress(Bitmap.CompressFormat.JPEG, 80, byteStream);
-        byte[] mapBytes = byteStream.toByteArray();
+        //ByteArrayOutputStream byteStream = new ByteArrayOutputStream();
+        //currentMap.compress(Bitmap.CompressFormat.JPEG, 80, byteStream);
+        //byte[] mapBytes = byteStream.toByteArray();
 
         writer.println("VALID_DATA");
         writer.println(currentLocation);
-        writer.println(mapBytes.length);
+        //writer.println(mapBytes.length);
 
         try {
-            out.write(mapBytes);
+            //out.write(mapBytes);
             out.flush();
         } catch (IOException e) {
             e.printStackTrace();

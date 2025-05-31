@@ -15,33 +15,35 @@ import java.io.PrintWriter;
 import java.net.Socket;
 
 public class SocketClient {
-    private static final String SERVER_IP = "192.168.43.1";
+    private static final String SERVER_IP = "192.168.99.1";
     private static final int SERVER_PORT = 8080;
     private Socket socket;
     private PrintWriter out;
     private BufferedReader in;
     private AppCompatActivity activity;
     private DataListener dataListener;
+    private static final SocketClient socketClientInstance = new SocketClient();
 
     public interface DataListener {
-        void onDataReceived(String text, Bitmap image);
+        void onDataReceived(String text/*, Bitmap image*/);
 
         void onError(String message);
     }
 
-    public SocketClient() {
+    private SocketClient() {
         initConnection();
     }
 
-    public SocketClient(AppCompatActivity activity) {
-        initConnection();
+    public static SocketClient getSocketClientInstance() {
+        return socketClientInstance;
+    }
+
+    public void setActivity(AppCompatActivity activity) {
         this.activity = activity;
     }
 
-    public SocketClient(AppCompatActivity activity, DataListener dataListener) {
-        initConnection();
-        this.activity = activity;
-        this.dataListener = dataListener;
+    public void setDataListener(DataListener listener) {
+        this.dataListener = listener;
     }
 
     private void initConnection() {
@@ -81,23 +83,23 @@ public class SocketClient {
                 while (true) {
                     out.println("GET_LOCATION_DATA");
                     String head = in.readLine();
-                    if (head.startsWith("NO_DATA")) {
+                    if (head == null || head.startsWith("NO_DATA")) {
                         Thread.sleep(5000L);
                     } else if (head.startsWith("VALID_DATA")) {
                         String locationText = in.readLine();
-                        int imageLength = Integer.parseInt(in.readLine());
-                        byte[] imageBytes = new byte[imageLength];
+                        //int imageLength = Integer.parseInt(in.readLine());
+                        //byte[] imageBytes = new byte[imageLength];
                         DataInputStream dataIn = new DataInputStream(socket.getInputStream());
-                        dataIn.readFully(imageBytes);
-                        Bitmap bitmap = BitmapFactory.decodeByteArray(imageBytes, 0, imageBytes.length);
+                        //dataIn.readFully(imageBytes);
+                        //Bitmap bitmap = BitmapFactory.decodeByteArray(imageBytes, 0, imageBytes.length);
 
-                        if(dataListener!=null){
-                            dataListener.onDataReceived(locationText,bitmap);
+                        if (dataListener != null) {
+                            dataListener.onDataReceived(locationText/*,bitmap*/);
                         }
                     }
                 }
             } catch (Exception e) {
-                dataListener.onError("接收数据错误："+e.getMessage());
+                dataListener.onError("接收数据错误：" + e.getMessage());
             }
         }).start();
     }
@@ -125,18 +127,7 @@ public class SocketClient {
 
     protected void sendAlertMessage() {
         new Thread(() -> {
-            if(out!=null) out.println("ALERT");
-        }).start();
-    }
-
-    public void setLocationText(String text) {
-        new Thread(() -> {
-            try {
-                out.println("LOCATION:" + text);
-                this.activity.runOnUiThread(() -> Toast.makeText(activity, "位置已同步", Toast.LENGTH_SHORT).show());
-            } catch (Exception e) {
-                this.activity.runOnUiThread(() -> Toast.makeText(activity, "同步失败", Toast.LENGTH_SHORT).show());
-            }
+            if (out != null) out.println("ALERT");
         }).start();
     }
 }

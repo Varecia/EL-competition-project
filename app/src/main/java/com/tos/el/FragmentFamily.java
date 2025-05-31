@@ -12,7 +12,7 @@ import androidx.fragment.app.Fragment;
 import com.google.android.material.button.MaterialButton;
 
 public class FragmentFamily extends Fragment {
-    SocketClient client=new SocketClient();
+    SocketClient client = SocketClient.getSocketClientInstance();
 
     @NonNull
     @Override
@@ -36,7 +36,6 @@ public class FragmentFamily extends Fragment {
         Intent intent = null;
         switch (buttonId) {
             case 1:
-                client.startNavigation(); //TODO
                 intent = new Intent(getActivity(), RemoteNavigationActivity.class);
                 break;
             case 2:

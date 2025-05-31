@@ -23,9 +23,9 @@ import com.google.android.gms.location.Priority;
 import java.util.Locale;
 
 /**
- * @deprecated 该活动为定位功能的早期实现。由于此版本仅能单机运行，故在终版中弃用，但代码仍保留。
  * @see com.tos.el.RemoteNavigationActivity
  * @see com.tos.el.LocalNavigationActivity
+ * @deprecated 该活动为定位功能的早期实现。由于此版本仅能单机运行，故在终版中弃用，但代码仍保留。
  */
 @Deprecated
 public class NavigationActivity extends ScheduledUpdateActivity {
@@ -74,14 +74,14 @@ public class NavigationActivity extends ScheduledUpdateActivity {
 
     private void getLastKnownLocation() {
         if (checkLocationPermission()) {
-            fusedLocationClient.getLastLocation().addOnSuccessListener(this, this::updateUI).addOnFailureListener(e-> Toast.makeText(this,"定位失败",Toast.LENGTH_SHORT).show());
+            fusedLocationClient.getLastLocation().addOnSuccessListener(this, this::updateUI).addOnFailureListener(e -> Toast.makeText(this, "定位失败", Toast.LENGTH_SHORT).show());
         }
     }
 
     private void requestNewLocation() {
         if (checkLocationPermission()) {
-            LocationRequest request = new LocationRequest.Builder(Priority.PRIORITY_HIGH_ACCURACY, 2*getInterval()).setMinUpdateIntervalMillis(getInterval()).build();
-            LocationCallback callback=new LocationCallback() {
+            LocationRequest request = new LocationRequest.Builder(Priority.PRIORITY_HIGH_ACCURACY, 2 * getInterval()).setMinUpdateIntervalMillis(getInterval()).build();
+            LocationCallback callback = new LocationCallback() {
                 @Override
                 public void onLocationResult(@NonNull LocationResult locationResult) {
                     updateUI(locationResult.getLastLocation());
@@ -89,7 +89,7 @@ public class NavigationActivity extends ScheduledUpdateActivity {
                 }
             };
             fusedLocationClient.requestLocationUpdates(request, callback, Looper.getMainLooper());
-            Toast.makeText(this,"正在请求最新位置",Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "正在请求最新位置", Toast.LENGTH_SHORT).show();
         }
     }
 
