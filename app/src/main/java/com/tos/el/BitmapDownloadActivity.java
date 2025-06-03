@@ -13,7 +13,7 @@ import androidx.work.WorkManager;
 
 public abstract class BitmapDownloadActivity extends ScheduledUpdateActivity {
     protected ImageView imageView;
-    protected String imageURL = "http://192.168.99.219//capture";
+    protected String imageURL = "http://192.168.43.66/capture";
     protected Bitmap bitmap;
 
     @Override

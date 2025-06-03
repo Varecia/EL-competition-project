@@ -34,8 +34,12 @@
                 android:name=".ObjectDetectionActivity"
                 android:exported="true" />
         <activity android:name=".RemoteNavigationActivity" />
-        <activity android:name=".LocalNavigationActivity"
-                android:exported="true"/>
+        <activity
+                android:name=".LocalNavigationActivity"
+                android:exported="true" />
+        <!--
+        <activity android:name=".NavigationActivity" />
+        -->
         <activity android:name=".BitmapSyncActivity" />
         <activity android:name=".BitmapDownloadActivity" />
         <activity android:name=".ScheduledUpdateActivity" />

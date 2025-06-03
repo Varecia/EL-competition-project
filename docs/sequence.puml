@@ -1,0 +1,59 @@
+@startuml blind_assistant_esp32_sequence
+title 盲人辅助系统（含ESP32硬件交互）
+participant "盲人" as User
+participant "盲人设备\n(主控制器)" as MainController
+participant "ESP32模块" as ESP32
+participant "家属端App" as App
+participant "家属" as Family
+
+== 硬件初始化 ==
+User -> MainController: 1. 开启服务端模式
+MainController -> ESP32: 2. 初始化摄像头\n(GPIO/I2C配置)
+ESP32 -> MainController: 3. 摄像头就绪信号
+MainController -> User: 4. 弹出提示\n"摄像头初始化成功"
+
+== 图像采集循环 ==
+
+loop 每1秒采集一次
+    MainController -> ESP32: 5. 触发图像捕获
+    ESP32 -> ESP32: 6. 通过OV2640获取JPEG
+    ESP32 -> MainController: 7. 返回高清图像数据\n(1024x768 RGB矩阵)
+    MainController -> MainController: 8. 调用MLKit模型
+    MainController -> User: 9. 语音播报\n"检测到: 行人/车辆/墙壁..."
+end
+
+== 家属端交互示例 ==
+alt 图片同步模块
+    Family -> App: 10a. 点击同步图片按钮
+
+    loop 每1秒采集一次
+    App -> ESP32: 11a. 请求图像
+    ESP32 -> App: 12a. 获取最新缓存图像
+    App -> Family: 13a. 显示图像
+    end
+
+else 定位追踪模块
+    Family -> App: 10b. 点击开启定位按钮
+    App -> MainController: 11b. 请求启动定位服务
+
+    loop 每5至10秒更新一次位置\n具体间隔由设备性能等决定
+    MainController -> MainController: 12b. gms定位
+    MainController -> App: 13b. 发送定位结果\n(经纬坐标和带标记地图)
+    App -> Family: 14b. 解析数据\n显示定位结果
+    end loop
+
+else 消息通知模块
+    Family -> App: 10c. 点击发送消息按钮
+    App -> Family: 11c. 弹出输入框
+    Family -> App: 12c. 输入文字消息
+    App -> MainController: 13c. 发送文字消息
+    MainController -> User: 14c. 文字转语音播报(TTS)
+
+else 紧急警报模块
+    Family -> App: 10d. 点点击紧急警报按钮
+    App -> MainController: 11d. 请求发送警报
+    MainController -> User: 12d. 播放紧急警报音频\n(高频蜂鸣)
+
+end alt
+
+@enduml

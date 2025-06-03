@@ -1,0 +1,41 @@
+@startuml
+left to right direction
+skinparam actorStyle awesome
+
+actor "盲人" as BlindUser <<Person>>
+actor "盲人家属" as Family <<Person>>
+
+rectangle "盲人辅助系统" {
+    BlindUser --> (开启同步签入服务端) : <<主用例>>
+    BlindUser --> (开启视频记录) : <<主用例>>
+    (开启视频记录) --> (定时获取图像) : <<include>>
+    (定时获取图像) --> (物品识别) : <<include>>
+    (物品识别) --> (语音播报结果) : <<include>>
+
+    Family --> (开启同步签入客户端) : <<主用例>>
+    Family --> (发送定位请求) : <<主用例>>
+    Family --> (发送警报请求) : <<主用例>>
+    Family --> (发送消息请求) : <<主用例>>
+    Family --> (发送同步请求) : <<主用例>>
+
+    (发送定位请求) ..> (获取实时位置) : <<extend>>
+    (发送警报请求) ..> (播放警报音频) : <<extend>>
+    (发送消息请求) ..> (语音转文字播报) : <<extend>>
+    (发送同步请求) ..> (获取图像数据) : <<extend>>
+
+    (获取实时位置) .u.> (开启同步签入服务端) : 依赖
+    (播放警报音频) .u.> (开启同步签入服务端) : 依赖
+    (语音转文字播报) .u.> (开启同步签入服务端) : 依赖
+    (获取图像数据) .u.> (定时获取图像) : 依赖
+}
+
+note right of BlindUser
+  服务端角色
+  持续保持连接状态
+end note
+
+note left of Family
+  客户端角色
+  需要时发起请求
+end note
+@enduml

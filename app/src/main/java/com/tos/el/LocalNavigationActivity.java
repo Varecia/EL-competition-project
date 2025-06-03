@@ -61,14 +61,16 @@ public class LocalNavigationActivity extends ScheduledUpdateActivity {
 
     private void getLastKnownLocation() {
         if (checkLocationPermission()) {
-            fusedLocationClient.getLastLocation().addOnSuccessListener(this, this::serverUpdateLocationData).addOnFailureListener(e -> Toast.makeText(this, "定位失败",
-                    Toast.LENGTH_SHORT).show());
+            fusedLocationClient.getLastLocation()
+                    .addOnSuccessListener(this, this::serverUpdateLocationData)
+                    .addOnFailureListener(e -> Toast.makeText(this, "定位失败", Toast.LENGTH_SHORT).show());
         }
     }
 
     private void requestNewLocation() {
         if (checkLocationPermission()) {
-            LocationRequest request = new LocationRequest.Builder(Priority.PRIORITY_HIGH_ACCURACY, 2 * getInterval()).setMinUpdateIntervalMillis(getInterval()).build();
+            LocationRequest request = new LocationRequest.Builder(Priority.PRIORITY_HIGH_ACCURACY, 2 * getInterval())
+                    .setMinUpdateIntervalMillis(getInterval()).build();
             LocationCallback callback = new LocationCallback() {
                 @Override
                 public void onLocationResult(@NonNull LocationResult locationResult) {

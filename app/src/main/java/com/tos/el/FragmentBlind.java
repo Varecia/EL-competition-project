@@ -24,6 +24,12 @@ public class FragmentBlind extends Fragment {
         button_bluetooth.setOnClickListener(v -> {
             Intent intent = new Intent(getActivity(), ObjectDetectionActivity.class);
             startActivity(intent);
+
+//            Intent intent=new Intent(getActivity(),LocalNavigationActivity.class);
+//            startActivity(intent);
+
+//            Intent intent=new Intent(getActivity(),NavigationActivity.class);
+//            startActivity(intent);
         });
 
         return view;

@@ -51,7 +51,8 @@ public class ObjectDetectionActivity extends BitmapDownloadActivity {
             for (ImageLabel label : labels) {
                 result.append(label.getText()).append(": ").append(label.getConfidence()).append("\n");
                 if (label.getConfidence() >= 0.60) {
-                    if (label.getText().contains("Standing") || label.getText().contains("Walking") || label.getText().contains("Wall") || label.getText().contains("Car")) {
+                    if (label.getText().contains("Standing") || label.getText().contains("Walking")
+                            || label.getText().contains("Wall") || label.getText().contains("Vehicle")) {
                         server.parseMessage("REMINDER:注意：前方有障碍物:0");
                     }
                 }

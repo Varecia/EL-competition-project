@@ -1,21 +1,21 @@
 package com.tos.el;
 
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
+//import android.graphics.Bitmap;
+//import android.graphics.BitmapFactory;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import java.io.BufferedReader;
-import java.io.DataInputStream;
+//import java.io.DataInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
 
 public class SocketClient {
-    private static final String SERVER_IP = "192.168.99.1";
+    private static final String SERVER_IP = "192.168.43.1";
     private static final int SERVER_PORT = 8080;
     private Socket socket;
     private PrintWriter out;
@@ -89,7 +89,7 @@ public class SocketClient {
                         String locationText = in.readLine();
                         //int imageLength = Integer.parseInt(in.readLine());
                         //byte[] imageBytes = new byte[imageLength];
-                        DataInputStream dataIn = new DataInputStream(socket.getInputStream());
+                        //DataInputStream dataIn = new DataInputStream(socket.getInputStream());
                         //dataIn.readFully(imageBytes);
                         //Bitmap bitmap = BitmapFactory.decodeByteArray(imageBytes, 0, imageBytes.length);
 
