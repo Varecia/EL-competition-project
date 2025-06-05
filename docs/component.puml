@@ -1,0 +1,19 @@
+@startuml
+
+package "Server" {
+    [盲人端设备]
+}
+
+node "外置硬件模块" {
+    [摄像] -l-> HTTP
+    [ESP32] -l-> [摄像]
+    HTTP -d-> [盲人端设备] : <<GET>>
+}
+
+node "Client" {
+    [盲人端设备] -d-> Port
+    Port -u-> [盲人端设备]
+    Port - [家属端设备]: TCP/IP\n192.168.43.1:8080
+}
+
+@enduml

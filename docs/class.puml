@@ -1,0 +1,80 @@
+@startuml
+
+abstract class ScheduledUpdateActivity
+abstract class BitmapDownloadActivity
+class BitmapSyncActivity
+class ObjectDetectionActivity
+class LocalNavigationActivity
+class RemoteNavigationActivity
+
+ScheduledUpdateActivity <|-- BitmapDownloadActivity: <<extend>>
+BitmapDownloadActivity <|-- ObjectDetectionActivity: <<extend>>
+BitmapDownloadActivity <|-- BitmapSyncActivity: <<extend>>
+ScheduledUpdateActivity <|-- LocalNavigationActivity: <<extend>>
+ScheduledUpdateActivity <|-- RemoteNavigationActivity: <<extend>>
+
+abstract class ScheduledUpdateActivity {
+    int interval <<执行间隔>>
+    public void getInterval() <<获取当前执行间隔>>
+    public void setInterval() <<设定执行间隔>>
+    abstract void update() <<定时执行的具体操作>>
+}
+
+abstract class BitmapDownloadActivity {
+    Bitmap bitmap <<存放下载的图片>>
+    override void update() <<定时下载图片>>
+}
+
+class ObjectDetectionActivity {
+    SocketServer server <<服务端行为>>
+    override void update() <<定时下载图片并识别>>
+}
+
+class BitmapSyncActivity {
+    SocketClient client <<用户端行为>>
+    override void update() <<定时发送获取图片请求>>
+}
+
+class LocalNavigationActivity {
+    Location location <<存放获取的位置数据>>
+    SocketServer server <<服务端行为>>
+    override void update() <<定时获取实时位置>>
+}
+
+class RemoteNavigationActivity {
+    String locationStr <<获取的格式化位置数据>>
+    SocketClient client <<用户端行为>>
+    override void update() <<定时发送获取位置请求>>
+}
+
+class SocketServer <<单例模式>> {
+    private static final SocketServer serverInstance <<单一实例>>
+    private SocketServer() <<私有构造方法>>
+    public static SocketServer getInstance() <<获取单一实例>>
+
+    void init() <<初始化连接>>
+    void start() <<开机>>
+    void parseMessage() <<解读请求>>
+    void startNavigation() <<启动定位>>
+    void sendLocation() <<回传位置数据>>
+    void showReminder() <<播放留言>>
+    void playAlert() <<播放警报>>
+    void stop() <<停机>>
+}
+
+class SocketClient <<单例模式>> {
+    private static final SocketClient serverInstance <<单一实例>>
+    private SocketClient() <<私有构造方法>>
+    public static SocketClient getInstance() <<获取单一实例>>
+
+    void init() <<初始化连接并上线>>
+    void startNavigation() <<远程定位>>
+    void getLocationData() <<获取位置>>
+    void sendMessage() <<发送消息>>
+    void sendAlert() <<紧急警报>>
+    void close() <<下线>>
+}
+
+SocketServer -- SocketClient: <<互斥：单一设备只能同时获取二者之一>>
+
+@enduml
