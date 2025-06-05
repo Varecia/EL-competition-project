@@ -50,7 +50,7 @@ else 消息通知模块
     MainController -> User: 14c. 文字转语音播报(TTS)
 
 else 紧急警报模块
-    Family -> App: 10d. 点点击紧急警报按钮
+    Family -> App: 10d. 点击紧急警报按钮
     App -> MainController: 11d. 请求发送警报
     MainController -> User: 12d. 播放紧急警报音频\n(高频蜂鸣)
 
